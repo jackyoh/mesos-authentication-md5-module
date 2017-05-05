@@ -42,9 +42,3 @@ string GeneratorMD5::render(){
 
    return mdString;
 }
-
-/*int main(void){
-   GeneratorMD5 md5("123456");   
-   cout<<md5.render()<<endl;
-   return 0;
-}*/
