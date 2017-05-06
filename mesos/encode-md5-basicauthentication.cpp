@@ -27,6 +27,8 @@
 #include <stout/strings.hpp>
 #include <stout/try.hpp>
 
+#include "../md5/md5_generator_token.cpp"
+
 namespace process {
 namespace http {
 namespace authentication {
@@ -105,11 +107,14 @@ Future<AuthenticationResult> EncodeMD5BasicAuthenticatorProcess::authenticate(
   LOG(INFO)<<"======================================";
   LOG(INFO)<<decoded.get();
   LOG(INFO)<<"======================================";
+
   vector<string> credential = strings::split(decoded.get(), ":");
+
+  GeneratorMD5 md5(credential[1]);
 
   if (credential.size() != 2 ||
       !credentials_.contains(credential[0]) ||
-      credentials_.at(credential[0]) != credential[1]) {
+      credentials_.at(credential[0]) != md5.render()) {
     return unauthorized;
   }
 
