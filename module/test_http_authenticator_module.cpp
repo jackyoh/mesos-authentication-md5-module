@@ -14,8 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mesos/authentication/http/basic_authenticator_factory.hpp>
-
 #include <mesos/mesos.hpp>
 #include <mesos/module.hpp>
 
@@ -25,28 +23,27 @@
 
 #include <stout/hashmap.hpp>
 
-#include "logging/logging.hpp"
+#include "../mesos/encode-md5-basicauthentication.cpp"
 
 using namespace mesos;
 
-using mesos::http::authentication::BasicAuthenticatorFactory;
+using std::string;
 
 using process::http::authentication::Authenticator;
 
+using process::http::authentication::BasicAuthenticator;
+
+using process::http::authentication::EncodeMD5BasicAuthenticator;
 
 static Authenticator* createHttpAuthenticator(const Parameters& parameters)
 {
-  Try<Authenticator*> authenticator =
-    BasicAuthenticatorFactory::create(parameters);
+   LOG(INFO)<<"Load createHttpAuthenticator function.";
 
-  if (authenticator.isError()) {
-    LOG(ERROR) << "Failed to create basic HTTP authenticator: "
-               << authenticator.error();
+   hashmap<string, string> credentialMap;
+   credentialMap.put("user1", "e10adc3949ba59abbe56e057f20f883e");
 
-    return nullptr;
-  }
-
-  return authenticator.get();
+   Authenticator* authenticator = new EncodeMD5BasicAuthenticator("mesos-master-readonly", credentialMap);
+   return authenticator;  
 }
 
 
