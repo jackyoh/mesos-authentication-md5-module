@@ -104,9 +104,6 @@ Future<AuthenticationResult> EncodeMD5BasicAuthenticatorProcess::authenticate(
   if (decoded.isError()) {
     return unauthorized;
   }
-  LOG(INFO)<<"======================================";
-  LOG(INFO)<<decoded.get();
-  LOG(INFO)<<"======================================";
 
   vector<string> credential = strings::split(decoded.get(), ":");
 

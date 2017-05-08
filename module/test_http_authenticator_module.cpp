@@ -15,6 +15,7 @@
 // limitations under the License.
 
 #include <mesos/mesos.hpp>
+
 #include <mesos/module.hpp>
 
 #include <mesos/module/http_authenticator.hpp>
@@ -40,12 +41,12 @@ static Authenticator* createHttpAuthenticator(const Parameters& parameters)
    LOG(INFO)<<"Load createHttpAuthenticator function.";
 
    hashmap<string, string> credentialMap;
-   credentialMap.put("user1", "e10adc3949ba59abbe56e057f20f883e");
-
+   foreach (const Parameter& parameter, parameters.parameter()) {
+       credentialMap.put(parameter.key(), parameter.value());
+   }
    Authenticator* authenticator = new EncodeMD5BasicAuthenticator("mesos-master-readonly", credentialMap);
    return authenticator;  
 }
-
 
 // Declares an HTTP Authenticator module named
 // 'org_apache_mesos_TestHttpBasicAuthenticator'.
