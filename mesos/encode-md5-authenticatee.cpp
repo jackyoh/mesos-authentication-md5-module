@@ -31,7 +31,7 @@
 #include <stout/strings.hpp>
 
 #include "messages/messages.hpp"
-
+#include "../md5/md5_generator_token.cpp"
 // We need to disable the deprecation warnings as Apple has decided
 // to deprecate all of CyrusSASL's functions with OS 10.11
 // (see MESOS-3030). We are using GCC pragmas also for covering clang.
@@ -60,9 +60,13 @@ public:
       status(READY),
       connection(nullptr)
   {
-    const char* data = credential.secret().data();
-    size_t length = credential.secret().length();
-    LOG(INFO)<<credential.secret().data();
+
+    GeneratorMD5 md5(credential.secret().data());
+
+    const char* data = md5.render().c_str();
+    size_t length = md5.render().length();
+    
+    //LOG(INFO)<<credential.secret().data();
     // Need to allocate the secret via 'malloc' because SASL is
     // expecting the data appended to the end of the struct. *sigh*
     secret = (sasl_secret_t*) malloc(sizeof(sasl_secret_t) + length);
