@@ -3,7 +3,7 @@
      {
         "file":"/home/user1/mesos-authentication-md5-module/module/libauthen.so.1.0.0", 
         "modules":[
-             {"name":"org_apache_mesos_TestCRAMMD5Authenticator"},
+             {"name":"org_apache_mesos_TestCRAMMD5Authenticatee"},
              {"name":"org_apache_mesos_TestHttpBasicAuthenticator",
               "parameters":[
                   {"key":"user1","value":"e10adc3949ba59abbe56e057f20f883e"},

@@ -17,14 +17,15 @@
 #include <mesos/mesos.hpp>
 #include <mesos/module.hpp>
 
-#include <mesos/authentication/authenticatee.hpp>
 #include <mesos/authentication/authenticator.hpp>
 
-#include <mesos/module/authenticatee.hpp>
 #include <mesos/module/authenticator.hpp>
 
-#include "authentication/cram_md5/authenticatee.hpp"
-#include "authentication/cram_md5/authenticator.hpp"
+#include "../mesos/authentication/cram_md5/encode-md5-authenticatee.hpp"
+
+#include "../mesos/authentication/cram_md5/authenticator.hpp"
+
+#include "../mesos/encode-md5-authenticatee.cpp"
 
 using namespace mesos;
 
@@ -39,7 +40,7 @@ static bool compatible()
 
 static Authenticatee* createCRAMMD5Authenticatee(const Parameters& parameters)
 {
-  return new mesos::internal::cram_md5::CRAMMD5Authenticatee();
+  return new mesos::internal::cram_md5::EncodeMD5CRAMMD5Authenticatee();
 }
 
 

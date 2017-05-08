@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "authentication/cram_md5/authenticatee.hpp"
+//#include "authentication/cram_md5/authenticatee.hpp"
 
 #include <stddef.h>   // For size_t needed by sasl.h.
 
@@ -29,8 +29,6 @@
 #include <process/protobuf.hpp>
 
 #include <stout/strings.hpp>
-
-#include "logging/logging.hpp"
 
 #include "messages/messages.hpp"
 
@@ -49,11 +47,11 @@ namespace cram_md5 {
 using namespace process;
 using std::string;
 
-class CRAMMD5AuthenticateeProcess
-  : public ProtobufProcess<CRAMMD5AuthenticateeProcess>
+class EncodeMD5CRAMMD5AuthenticateeProcess
+  : public ProtobufProcess<EncodeMD5CRAMMD5AuthenticateeProcess>
 {
 public:
-  CRAMMD5AuthenticateeProcess(
+  EncodeMD5CRAMMD5AuthenticateeProcess(
       const Credential& _credential,
       const UPID& _client)
     : ProcessBase(ID::generate("crammd5-authenticatee")),
@@ -64,7 +62,7 @@ public:
   {
     const char* data = credential.secret().data();
     size_t length = credential.secret().length();
-
+    LOG(INFO)<<credential.secret().data();
     // Need to allocate the secret via 'malloc' because SASL is
     // expecting the data appended to the end of the struct. *sigh*
     secret = (sasl_secret_t*) malloc(sizeof(sasl_secret_t) + length);
@@ -75,7 +73,7 @@ public:
     secret->len = length;
   }
 
-  virtual ~CRAMMD5AuthenticateeProcess()
+  virtual ~EncodeMD5CRAMMD5AuthenticateeProcess()
   {
     if (connection != nullptr) {
       sasl_dispose(&connection);
@@ -181,21 +179,21 @@ protected:
   {
     // Anticipate mechanisms and steps from the server.
     install<AuthenticationMechanismsMessage>(
-        &CRAMMD5AuthenticateeProcess::mechanisms,
+        &EncodeMD5CRAMMD5AuthenticateeProcess::mechanisms,
         &AuthenticationMechanismsMessage::mechanisms);
 
     install<AuthenticationStepMessage>(
-        &CRAMMD5AuthenticateeProcess::step,
+        &EncodeMD5CRAMMD5AuthenticateeProcess::step,
         &AuthenticationStepMessage::data);
 
     install<AuthenticationCompletedMessage>(
-        &CRAMMD5AuthenticateeProcess::completed);
+        &EncodeMD5CRAMMD5AuthenticateeProcess::completed);
 
     install<AuthenticationFailedMessage>(
-        &CRAMMD5AuthenticateeProcess::failed);
+        &EncodeMD5CRAMMD5AuthenticateeProcess::failed);
 
     install<AuthenticationErrorMessage>(
-        &CRAMMD5AuthenticateeProcess::error,
+        &EncodeMD5CRAMMD5AuthenticateeProcess::error,
         &AuthenticationErrorMessage::error);
   }
 
@@ -372,16 +370,16 @@ private:
 };
 
 
-Try<Authenticatee*> CRAMMD5Authenticatee::create()
+Try<Authenticatee*> EncodeMD5CRAMMD5Authenticatee::create()
 {
-  return new CRAMMD5Authenticatee();
+  return new EncodeMD5CRAMMD5Authenticatee();
 }
 
 
-CRAMMD5Authenticatee::CRAMMD5Authenticatee() : process(nullptr) {}
+EncodeMD5CRAMMD5Authenticatee::EncodeMD5CRAMMD5Authenticatee() : process(nullptr) {}
 
 
-CRAMMD5Authenticatee::~CRAMMD5Authenticatee()
+EncodeMD5CRAMMD5Authenticatee::~EncodeMD5CRAMMD5Authenticatee()
 {
   if (process != nullptr) {
     terminate(process);
@@ -391,7 +389,7 @@ CRAMMD5Authenticatee::~CRAMMD5Authenticatee()
 }
 
 
-Future<bool> CRAMMD5Authenticatee::authenticate(
+Future<bool> EncodeMD5CRAMMD5Authenticatee::authenticate(
   const UPID& pid,
   const UPID& client,
   const mesos::Credential& credential)
@@ -403,11 +401,11 @@ Future<bool> CRAMMD5Authenticatee::authenticate(
   }
 
   CHECK(process == nullptr);
-  process = new CRAMMD5AuthenticateeProcess(credential, client);
+  process = new EncodeMD5CRAMMD5AuthenticateeProcess(credential, client);
   spawn(process);
 
   return dispatch(
-      process, &CRAMMD5AuthenticateeProcess::authenticate, pid);
+      process, &EncodeMD5CRAMMD5AuthenticateeProcess::authenticate, pid);
 }
 
 } // namespace cram_md5 {
