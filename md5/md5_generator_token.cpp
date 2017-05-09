@@ -15,9 +15,13 @@ public:
    ~GeneratorMD5(){}
 
    string render(){
+      string appendStr;
+      appendStr.append(_word);      
+      appendStr.append("abcdef");
+
       unsigned char digest[MD5_DIGEST_LENGTH];
-      char wordArray[sizeof(_word)];
-      strcpy(wordArray, _word.c_str());
+      char wordArray[sizeof(appendStr)];
+      strcpy(wordArray, appendStr.c_str());
 
       MD5((unsigned char*)&wordArray, strlen(wordArray), (unsigned char*)&digest);
      char mdString[33];
