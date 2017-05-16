@@ -1,7 +1,7 @@
 {
   "libraries":[
      {
-        "file":"/home/user1/mesos-authentication-md5-module/module/libauthen.so.1.0.0", 
+        "file":"/home/user1/mesos-authentication-md5-module/module/libauthen.so", 
         "modules":[
              {"name":"org_apache_mesos_TestCRAMMD5Authenticatee"},
              {"name":"org_apache_mesos_TestHttpBasicAuthenticator",
